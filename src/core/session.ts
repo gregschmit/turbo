@@ -35,6 +35,7 @@ export class Session implements HistoryDelegate, LinkClickObserverDelegate, Navi
   enabled = true
   progressBarDelay = 500
   started = false
+  disableDriveByDefault = false
 
   start() {
     if (!this.started) {
@@ -252,9 +253,12 @@ export class Session implements HistoryDelegate, LinkClickObserverDelegate, Navi
   elementIsNavigable(element?: Element) {
     const container = element?.closest("[data-turbo]")
     if (container) {
+      if (this.disableDriveByDefault) {
+        return container.getAttribute("data-turbo") == "true"
+      }
       return container.getAttribute("data-turbo") != "false"
     } else {
-      return true
+      return !this.disableDriveByDefault
     }
   }
 
